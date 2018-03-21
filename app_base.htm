@@ -1,0 +1,48 @@
+<%inherit file="/homepage/templates/base.htm" />
+<%! from catalog import models as cmod %>
+
+<%block name="menu">
+  <li class="nav-item">
+    <a class="nav-link ${ 'active' if request.dmp.page == 'index' else '' }" href="/">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link ${ 'active' if request.dmp.page == 'faq' else '' }" href="/faq/">FAQ</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link ${ 'active' if request.dmp.page == 'terms' else '' }" href="/terms/">Terms</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link ${ 'active' if request.dmp.page == 'sections' else '' }" href="/sections/">Sections</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link ${ 'active' if request.dmp.page == 'about' else '' }" href="/about/">About</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link ${ 'active' if request.dmp.page == 'contact' else '' }" href="/contact/">Contact</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link ${ 'active' if request.dmp.page == 'catalog/index' else '' }" href="/catalog/index/">View Product</a>
+  </li>
+</%block>
+
+<%block name="content_left">
+    <ul class="category_list">
+        <li class="${ 'active' if category is None else '' }"><a href="/catalog/index/">All Products</a></li>
+        %for cat in cmod.Category.objects.order_by('name'):
+            <li class="${ 'active' if category == cat else '' }"><a href="/catalog/index/${ cat.id }/">${ cat.name }</a></li>
+        %endfor
+    </ul>
+</%block>
+
+
+<%block name="content_right">
+    <ol class="last5">
+        <h3>Last Five Items Viewed</h3>
+        %for thumb in request.lastfive[0:( 5 if lastitem is 1 else 6)]:
+            <li class="fiveitems" id="item${ thumb.id }"><a class="itemtitle" href="/catalog/detail/${ thumb.id }/">${ thumb.name }</a>
+            <br>
+            <img alt="${ thumb.name }" class="thumbnailzz" src="${ thumb.image_url() }">
+            </li>
+        %endfor
+    </ol>
+</%block>
