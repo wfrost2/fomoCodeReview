@@ -1,0 +1,35 @@
+<%inherit file="/homepage/templates/base.htm" />
+<%! from catalog import models as cmod %>
+
+<%block name="navbar_links">
+  <li class=" ${'active' if request.dmp.page =='productList' else ''}"><a href="/manager/productList">Products</a></li>
+  <li class=" ${'active' if request.dmp.page =='createProduct' else ''}"><a href="/manager/createProduct">Create Product</a></li>
+</%block>
+
+
+<%block name="content_left">
+    <div class="content">
+        <ul id="category">
+          <li class="${'active' if (category is None) else ''}"><a href="/catalog/index/">All Products</a></li>
+          %for c in categories:
+            <li class="${'active' if (category is not None and c.id == category.id) else ''}">
+              <a href="/catalog/index/${c.id}">${c.name}</a>
+            </li>
+          %endfor
+        </ul>
+    </div>
+</%block>
+
+<%block name="content_right">
+    <h2 id="last_five_title">Recently Viewed:</h2>
+    <ol id="last_five_list">
+        %for product in request.last_five[1:6]:
+            <li>
+                <a href="/catalog/detail/${ product.id }/">
+                    <div><img class="product_image" src="${ product.image_url }" /></div>
+                    <div class="product_title">$( product.name | h }</div>
+                </a>
+            </li>
+        %endfor
+    </ol>
+</%block>
