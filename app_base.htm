@@ -1,0 +1,51 @@
+<%inherit file="/homepage/templates/base.htm" />
+
+
+<%block name="navbar_links">
+<!-- <li class=" ${'active' if request.dmp.page =='productList' else ''}"><a href="/manager/productList">Products</a></li>
+<li class=" ${'active' if request.dmp.page =='createProduct' else ''}"><a href="/manager/createProduct">Create Product</a></li> -->
+</%block>
+
+
+<%block name="content_left">
+  <%! from catalog import models as cmod %>
+  <% categories = cmod.Category.objects.order_by('name') %>
+  <div class="content">
+    <ul id="category">
+      <li class="${'active' if (category is None) else ''}"><a href="/catalog/index/">All Products</a></li>
+      %for c in categories:
+      <li class="${'active' if (category is not None and c.id == category.id) else ''}">
+        <a href="/catalog/index/${c.id}">${c.name}</a>
+      </li>
+      %endfor
+    </ul>
+  </div>
+</%block>
+
+<%block name="content_right">
+  <div class="content">
+    <%
+      if request.dmp.page == 'detail':
+        recent = request.last_five[1:6]
+      else:
+        recent = request.last_five[0:5]
+    %>
+    <div class="text-right">
+      <h4>Recently viewed items:</h4>
+    </div>
+    <br>
+    <div class="col-md-8"></div>
+    <div class="col-md-4">
+      <ol>
+        %for r in recent:
+        <a href="/catalog/detail/${r.id}">
+          <li class="li-last_five">
+            <img class="img-last_five" src="${r.image_url()}"/>
+            <h5 class="text-muted">${r.name}</h5>
+          </li>
+        </a>
+        %endfor
+      </ol>
+    </div>
+  </div>
+</%block>
